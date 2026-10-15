@@ -1,0 +1,86 @@
+_schema-version: "3.3.0"
+ID: cloud-alm-job-failure-monitor
+version: 1.0.0
+description: Cloud ALM Job Failure Warning Agent
+parameters:
+  enable-parallel-deployments: true
+
+modules:
+  - name: cloud-alm-job-monitor-srv
+    type: nodejs
+    path: .
+    parameters:
+      buildpack: nodejs_buildpack
+      instances: 1
+      memory: 512M
+      disk-quota: 1G
+    build-parameters:
+      builder: npm-ci
+    provides:
+      - name: srv-api
+        properties:
+          srv-url: ${default-url}
+    requires:
+      - name: cloud-alm-job-monitor-destination
+      - name: cloud-alm-job-monitor-xsuaa
+      - name: cloud-alm-job-monitor-db
+      - name: cloud-alm-job-monitor-scheduler
+
+  - name: cloud-alm-job-monitor-db-deployer
+    type: hdb
+    path: gen/db
+    parameters:
+      buildpack: nodejs_buildpack
+    requires:
+      - name: cloud-alm-job-monitor-db
+
+  - name: cloud-alm-job-monitor-router
+    type: nodejs
+    path: approuter
+    parameters:
+      memory: 256M
+      disk-quota: 256M
+    requires:
+      - name: cloud-alm-job-monitor-xsuaa
+      - name: cloud-alm-job-monitor-destination
+      - name: srv-api
+        group: destinations
+        properties:
+          name: srv-api
+          url: ~{srv-url}
+          forwardAuthToken: true
+
+resources:
+  - name: cloud-alm-job-monitor-destination
+    type: org.cloudfoundry.existing-service
+    parameters:
+      service-name: cloud-alm-job-monitor-destination
+
+  - name: cloud-alm-job-monitor-xsuaa
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      service-name: cloud-alm-job-monitor-xsuaa
+      path: ./xs-security.json
+
+  - name: cloud-alm-job-monitor-db
+    type: com.sap.xs.hdi-container
+    parameters:
+      service: hana
+      service-plan: hdi-shared
+      service-name: cloud-alm-job-monitor-db
+
+  - name: cloud-alm-job-monitor-scheduler
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: jobscheduler
+      service-plan: standard
+      service-name: cloud-alm-job-monitor-scheduler
+
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npm ci
+        - npx cds build --production

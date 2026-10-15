@@ -1,0 +1,62 @@
+{
+  "xsappname": "cloud-alm-job-failure-monitor",
+  "tenant-mode": "dedicated",
+  "oauth2-configuration": {
+    "redirect-uris": [
+      "https://job-failure-monitor.cfapps.eu20-001.hana.ondemand.com/**"
+    ]
+  },
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.User",
+      "description": "Permission to use the Job Failure Warning Agent"
+    },
+    {
+      "name": "$XSAPPNAME.Admin",
+      "description": "Administrative permission for the Job Failure Warning Agent"
+    },
+    {
+      "name": "$XSAPPNAME.JobRunner",
+      "description": "Permission to trigger the scheduled warning workflow",
+      "grant-as-authority-to-apps": ["$XSSERVICENAME(cloud-alm-job-monitor-scheduler)"]
+    },
+    {
+      "name": "$XSAPPNAME.A2AClient",
+      "description": "Machine permission for read-only A2A job-monitor summaries"
+    }
+  ],
+  "role-templates": [
+    {
+      "name": "JobFailureMonitorUser",
+      "description": "Job Failure Warning Agent user",
+      "scope-references": ["$XSAPPNAME.User"]
+    },
+    {
+      "name": "JobFailureMonitorAdmin",
+      "description": "Job Failure Warning Agent administrator",
+      "scope-references": ["$XSAPPNAME.User", "$XSAPPNAME.Admin"]
+    },
+    {
+      "name": "JobFailureMonitorJobRunner",
+      "description": "Scheduled workflow caller",
+      "scope-references": ["$XSAPPNAME.JobRunner"]
+    },
+    {
+      "name": "JobFailureMonitorA2AClient",
+      "description": "Read-only A2A machine client",
+      "scope-references": ["$XSAPPNAME.A2AClient"]
+    }
+  ],
+  "role-collections": [
+    {
+      "name": "JobFailureMonitor_Viewer",
+      "description": "Read the Job Failure Monitor dashboard",
+      "role-template-references": ["$XSAPPNAME.JobFailureMonitorUser"]
+    },
+    {
+      "name": "JobFailureMonitor_Admin",
+      "description": "Job Failure Monitor - administrator",
+      "role-template-references": ["$XSAPPNAME.JobFailureMonitorAdmin"]
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+node_modules/
+default-env.json
+.env
+*.log
+coverage/
+gen/
+mta_archives/
+*.mtar
+.cf/
+db.sqlite
+

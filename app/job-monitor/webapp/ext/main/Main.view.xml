@@ -1,0 +1,164 @@
+<mvc:View
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:f="sap.f"
+  xmlns:l="sap.ui.layout"
+  xmlns:macros="sap.fe.macros"
+  xmlns:viz="sap.viz.ui5.controls"
+  xmlns:vizData="sap.viz.ui5.data"
+  xmlns:vizFeeds="sap.viz.ui5.controls.common.feeds"
+  controllerName="job.monitor.ext.main.Main">
+
+  <f:DynamicPage id="page" headerExpanded="true" showFooter="false" fitContent="false">
+    <f:title>
+      <f:DynamicPageTitle>
+        <f:heading>
+          <Title text="Job Failure Monitor" level="H2"/>
+        </f:heading>
+        <f:expandedContent>
+          <Text text="Source: {= ${ui>/kpi/dataSource} || 'SAP Cloud ALM - Job &amp; Automation Monitoring'} · System my409865"/>
+        </f:expandedContent>
+        <f:snappedContent>
+          <Text text="{ui>/kpi/total} job runs · {ui>/kpi/error} failed · {ui>/kpi/successRate}% success"/>
+        </f:snappedContent>
+        <f:actions>
+          <ObjectStatus
+            text="{= ${ui>/kpi/lastSyncAt} ? 'Last sync: ' + ${ui>/lastSyncText} : 'Waiting for first sync…'}"
+            state="{= ${ui>/kpi/lastSyncOk} === false ? 'Error' : 'None'}"
+            icon="{= ${ui>/kpi/lastSyncOk} === false ? 'sap-icon://message-error' : 'sap-icon://synchronize'}"
+            tooltip="{ui>/kpi/lastSyncInfo}"
+            class="sapUiSmallMarginEnd"/>
+          <SegmentedButton id="periodSelector" selectedKey="{ui>/period}" selectionChange=".onPeriodChange">
+            <items>
+              <SegmentedButtonItem key="1H" text="1h"/>
+              <SegmentedButtonItem key="24H" text="24h"/>
+              <SegmentedButtonItem key="7D" text="7 days"/>
+              <SegmentedButtonItem key="30D" text="30 days"/>
+            </items>
+          </SegmentedButton>
+          <Switch id="autoRefreshSwitch" state="{ui>/autoRefresh}" change=".onAutoRefreshToggle"
+            customTextOn="Auto" customTextOff="Off" tooltip="Auto-refresh every {ui>/refreshSeconds}s"/>
+          <Button id="refreshBtn" icon="sap-icon://refresh" tooltip="Refresh now" press=".onRefresh"/>
+          <Button id="syncBtn" icon="sap-icon://download-from-cloud" text="Pull from Cloud ALM" type="Emphasized"
+            press=".onSyncNow" busy="{ui>/syncing}"/>
+        </f:actions>
+      </f:DynamicPageTitle>
+    </f:title>
+
+    <f:header>
+      <f:DynamicPageHeader pinnable="true">
+        <HBox wrap="Wrap" id="kpiBox" class="jobKpiBox">
+          <GenericTile id="tileTotal" class="sapUiTinyMarginEnd sapUiTinyMarginBottom" header="Total Job Runs"
+            subheader="{ui>/periodText}" press=".onTilePress" frameType="OneByOne">
+            <customData><core:CustomData key="group" value=""/></customData>
+            <TileContent footer="All states">
+              <NumericContent value="{ui>/kpi/total}" icon="sap-icon://batch-payments" withMargin="false" valueColor="Neutral"/>
+            </TileContent>
+          </GenericTile>
+          <GenericTile id="tileSuccess" class="sapUiTinyMarginEnd sapUiTinyMarginBottom" header="Successful"
+            subheader="{ui>/periodText}" press=".onTilePress" frameType="OneByOne">
+            <customData><core:CustomData key="group" value="Success"/></customData>
+            <TileContent footer="{ui>/kpi/successRate}% success rate">
+              <NumericContent value="{ui>/kpi/success}" icon="sap-icon://sys-enter-2" withMargin="false" valueColor="Good"/>
+            </TileContent>
+          </GenericTile>
+          <GenericTile id="tileError" class="sapUiTinyMarginEnd sapUiTinyMarginBottom" header="Failed"
+            subheader="{ui>/periodText}" press=".onTilePress" frameType="OneByOne">
+            <customData><core:CustomData key="group" value="Error"/></customData>
+            <TileContent footer="Need action">
+              <NumericContent value="{ui>/kpi/error}" icon="sap-icon://error" withMargin="false" valueColor="Error"/>
+            </TileContent>
+          </GenericTile>
+          <GenericTile id="tileWarning" class="sapUiTinyMarginEnd sapUiTinyMarginBottom" header="Warnings"
+            subheader="{ui>/periodText}" press=".onTilePress" frameType="OneByOne">
+            <customData><core:CustomData key="group" value="Warning"/></customData>
+            <TileContent footer="Finished with warnings">
+              <NumericContent value="{ui>/kpi/warning}" icon="sap-icon://alert" withMargin="false" valueColor="Critical"/>
+            </TileContent>
+          </GenericTile>
+          <GenericTile id="tileInProcess" class="sapUiTinyMarginEnd sapUiTinyMarginBottom" header="In Process"
+            subheader="{ui>/periodText}" press=".onTilePress" frameType="OneByOne">
+            <customData><core:CustomData key="group" value="InProcess"/></customData>
+            <TileContent footer="Running / scheduled">
+              <NumericContent value="{ui>/kpi/inProcess}" icon="sap-icon://pending" withMargin="false" valueColor="Neutral"/>
+            </TileContent>
+          </GenericTile>
+        </HBox>
+      </f:DynamicPageHeader>
+    </f:header>
+
+    <f:content>
+      <VBox>
+        <l:Grid defaultSpan="XL6 L6 M12 S12" vSpacing="0" hSpacing="1" class="sapUiSmallMarginBottom">
+          <Panel headerText="Job runs over time" class="sapUiNoContentPadding jobChartPanel">
+            <viz:VizFrame id="trendChart" vizType="stacked_column" uiConfig="{applicationSet:'fiori'}"
+              height="300px" width="100%">
+              <viz:dataset>
+                <vizData:FlattenedDataset data="{ui>/trend}">
+                  <vizData:dimensions>
+                    <vizData:DimensionDefinition name="Time" value="{ui>label}"/>
+                  </vizData:dimensions>
+                  <vizData:measures>
+                    <vizData:MeasureDefinition name="Success" value="{ui>success}"/>
+                    <vizData:MeasureDefinition name="Warning" value="{ui>warning}"/>
+                    <vizData:MeasureDefinition name="Error" value="{ui>error}"/>
+                    <vizData:MeasureDefinition name="In Process" value="{ui>inProcess}"/>
+                  </vizData:measures>
+                </vizData:FlattenedDataset>
+              </viz:dataset>
+              <viz:feeds>
+                <vizFeeds:FeedItem uid="valueAxis" type="Measure" values="Success,Warning,Error,In Process"/>
+                <vizFeeds:FeedItem uid="categoryAxis" type="Dimension" values="Time"/>
+              </viz:feeds>
+            </viz:VizFrame>
+          </Panel>
+          <Panel headerText="By job (top 10, failures first)" class="sapUiNoContentPadding jobChartPanel">
+            <viz:VizFrame id="jobChart" vizType="stacked_bar" uiConfig="{applicationSet:'fiori'}"
+              height="300px" width="100%" selectData=".onJobSelect">
+              <viz:dataset>
+                <vizData:FlattenedDataset data="{ui>/byJob}">
+                  <vizData:dimensions>
+                    <vizData:DimensionDefinition name="Job" value="{ui>jobName}"/>
+                  </vizData:dimensions>
+                  <vizData:measures>
+                    <vizData:MeasureDefinition name="Success" value="{ui>success}"/>
+                    <vizData:MeasureDefinition name="Warning" value="{ui>warning}"/>
+                    <vizData:MeasureDefinition name="Error" value="{ui>error}"/>
+                    <vizData:MeasureDefinition name="In Process" value="{ui>inProcess}"/>
+                  </vizData:measures>
+                </vizData:FlattenedDataset>
+              </viz:dataset>
+              <viz:feeds>
+                <vizFeeds:FeedItem uid="valueAxis" type="Measure" values="Success,Warning,Error,In Process"/>
+                <vizFeeds:FeedItem uid="categoryAxis" type="Dimension" values="Job"/>
+              </viz:feeds>
+            </viz:VizFrame>
+          </Panel>
+        </l:Grid>
+
+        <Panel headerText="Top errors" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+          <Table id="topErrors" items="{ui>/topErrors}" noDataText="No failed jobs in the selected period" growing="true" growingThreshold="5">
+            <columns>
+              <Column width="22rem"><Text text="Job"/></Column>
+              <Column><Text text="Error Reason (Job Log)"/></Column>
+              <Column width="6rem" hAlign="End"><Text text="Runs"/></Column>
+            </columns>
+            <items>
+              <ColumnListItem type="Active" press=".onTopErrorPress">
+                <Text text="{ui>jobName}" wrapping="true"/>
+                <Text text="{ui>errorText}" wrapping="true"/>
+                <ObjectNumber number="{ui>count}" state="Error"/>
+              </ColumnListItem>
+            </items>
+          </Table>
+        </Panel>
+
+        <macros:FilterBar id="FilterBar" metaPath="@com.sap.vocabularies.UI.v1.SelectionFields" liveMode="true"/>
+        <macros:Table id="JobTable" metaPath="@com.sap.vocabularies.UI.v1.LineItem" filterBar="FilterBar"
+          header="Job Runs" enableExport="true" variantManagement="None" growingThreshold="30"
+          personalization="Column,Sort,Filter"/>
+      </VBox>
+    </f:content>
+  </f:DynamicPage>
+</mvc:View>

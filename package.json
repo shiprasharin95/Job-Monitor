@@ -1,0 +1,38 @@
+{
+  "name": "cloud-alm-failed-job-monitor",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CAP application for monitoring failed SAP Cloud ALM jobs",
+  "dependencies": {
+    "@cap-js/hana": "^2.1.0",
+    "@sap-cloud-sdk/connectivity": "^4.9.1",
+    "@sap-cloud-sdk/http-client": "^4.9.1",
+    "@sap/cds": "^9.5.1",
+    "@sap/xssec": "^4.8.1",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@cap-js/sqlite": "^2.1.0",
+    "@sap/cds-dk": "^9.5.0",
+    "mbt": "^1.2.49"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "watch": "cds watch",
+    "test": "node --test"
+  },
+  "cds": {
+    "folders": {
+      "app": "app",
+      "srv": "srv"
+    },
+    "requires": {
+      "auth": {
+        "kind": "jwt"
+      },
+      "db": {
+        "kind": "sql"
+      }
+    }
+  }
+}

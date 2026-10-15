@@ -1,0 +1,11 @@
+/* FPM custom page: make the DynamicPage fill the viewport */
+html, body { height: 100%; margin: 0; }
+.sapUiComponentContainer,
+.sapUiComponentContainer > div,
+.sapMNav,
+.sapMNav > .sapMNavItem,
+.sapUiView,
+.sapFDynamicPage { height: 100%; }
+
+.jobKpiBox .sapMGT { margin: 0 0.5rem 0.5rem 0; }
+.jobChartPanel .sapMPanelContent { padding: 0.25rem 0.5rem; }

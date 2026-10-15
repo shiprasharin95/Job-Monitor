@@ -1,0 +1,206 @@
+<mxfile host="app.diagrams.net">
+  <diagram id="jobmon" name="Job Monitor Agent on SAP BTP">
+    <mxGraphModel dx="1600" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="&lt;b&gt;&lt;font style=&quot;font-size:24px&quot; color=&quot;#0a6ed1&quot;&gt;Job Monitor Agent on SAP BTP&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:12px&quot;&gt;A CAP application that pulls scheduled job runs from SAP Cloud ALM into SAP HANA Cloud, shows failures in a dashboard,&lt;br&gt;explains them with an AI agent and warns job schedulers by e-mail. Users and agents only read the persisted data.&lt;/font&gt;" style="text;html=1;align=left;verticalAlign=top;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="30" y="10" width="600" height="90" as="geometry"/>
+        </mxCell>
+
+        <!-- A2A client -->
+        <mxCell id="a2a" value="&lt;b&gt;A2A client (Joule / other agent)&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:11px&quot; color=&quot;#5b738b&quot;&gt;machine OAuth client with scope A2AClient&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff4e5;strokeColor=#e9730c;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="640" y="30" width="300" height="52" as="geometry"/>
+        </mxCell>
+
+        <!-- User -->
+        <mxCell id="user" value="&lt;b&gt;User&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:11px&quot; color=&quot;#5b738b&quot;&gt;Job operations&lt;/font&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#eaf3fc;strokeColor=#0a6ed1;" vertex="1" parent="1">
+          <mxGeometry x="62" y="230" width="36" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="browser" value="&lt;b&gt;Web browser&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot; color=&quot;#5b738b&quot;&gt;dashboard UI&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f6f7;strokeColor=#89919a;" vertex="1" parent="1">
+          <mxGeometry x="25" y="380" width="110" height="46" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_user_browser" style="endArrow=none;dashed=1;strokeColor=#89919a;strokeWidth=1.5;" edge="1" parent="1" source="user" target="browser">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- BTP container -->
+        <mxCell id="btp" value="" style="rounded=1;arcSize=2;fillColor=#f4f9fe;strokeColor=#0a6ed1;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="190" y="110" width="1000" height="620" as="geometry"/>
+        </mxCell>
+        <mxCell id="btp_lbl" value="&lt;b&gt;SAP BTP&lt;/b&gt;" style="rounded=1;fillColor=#0a6ed1;strokeColor=none;fontColor=#ffffff;html=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="118" width="120" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="btp_sub" value="Subaccount sap-genai | Cloud Foundry eu20, space GenAI" style="text;html=1;align=left;fontSize=12;fontColor=#5b738b;" vertex="1" parent="1">
+          <mxGeometry x="330" y="118" width="400" height="24" as="geometry"/>
+        </mxCell>
+
+        <!-- Approuter -->
+        <mxCell id="router" value="&lt;b&gt;&lt;font color=&quot;#0a6ed1&quot; style=&quot;font-size:14px&quot;&gt;Approuter + Dashboard UI&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:11px&quot; color=&quot;#5b738b&quot;&gt;cloud-alm-job-monitor-router (@sap/approuter)&lt;/font&gt;" style="rounded=1;arcSize=5;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#ffffff;strokeColor=#0a6ed1;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="220" y="170" width="300" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="r1" value="Failed job monitor: KPIs, failed jobs, detail" style="rounded=1;fontSize=11;fillColor=#eaf3fc;strokeColor=#0a6ed1;" vertex="1" parent="1">
+          <mxGeometry x="236" y="220" width="268" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="r2" value="Analyze with SAP AI agent (button)" style="rounded=1;fontSize=11;fillColor=#eaf3fc;strokeColor=#0a6ed1;" vertex="1" parent="1">
+          <mxGeometry x="236" y="254" width="268" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="r3" value="XSUAA login, JWT forwarded to CAP" style="rounded=1;fontSize=11;fillColor=#f0fbf6;strokeColor=#1a9d6c;" vertex="1" parent="1">
+          <mxGeometry x="236" y="288" width="268" height="22" as="geometry"/>
+        </mxCell>
+
+        <!-- XSUAA -->
+        <mxCell id="xsuaa" value="&lt;b&gt;&lt;font color=&quot;#a100c2&quot; style=&quot;font-size:14px&quot;&gt;SAP Authorization &amp;amp; Trust Mgmt&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:11px&quot; color=&quot;#5b738b&quot;&gt;XSUAA (application plan)&lt;/font&gt;" style="rounded=1;arcSize=5;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#ffffff;strokeColor=#a100c2;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="220" y="380" width="300" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="x1" value="Role collections: JobFailureMonitor_Viewer / _Admin" style="rounded=1;fontSize=11;fillColor=#f9eefc;strokeColor=#a100c2;" vertex="1" parent="1">
+          <mxGeometry x="236" y="428" width="268" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="x2" value="Scopes: User, Admin, JobRunner, A2AClient" style="rounded=1;fontSize=11;fillColor=#f9eefc;strokeColor=#a100c2;" vertex="1" parent="1">
+          <mxGeometry x="236" y="456" width="268" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="x3" value="Users get access only through role collections" style="text;html=1;fontSize=10;fontColor=#5b738b;align=center;" vertex="1" parent="1">
+          <mxGeometry x="236" y="482" width="268" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- CAP -->
+        <mxCell id="cap" value="&lt;b&gt;&lt;font color=&quot;#0a6ed1&quot; style=&quot;font-size:14px&quot;&gt;Job Failure Dashboard (CAP Node.js)&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:11px&quot; color=&quot;#5b738b&quot;&gt;JOB_Failure_Dashboard | 1 instance | scheduler runs in-process&lt;/font&gt;" style="rounded=1;arcSize=3;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#ffffff;strokeColor=#0a6ed1;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="600" y="170" width="520" height="330" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1" value="OData V4 /odata/v4/job-monitor (summary, jobErrors, analyzeJob) - scope User" style="rounded=1;fontSize=11;fillColor=#eaf3fc;strokeColor=#0a6ed1;" vertex="1" parent="1">
+          <mxGeometry x="616" y="220" width="488" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2" value="A2A server POST /a2a + public agent card - scope A2AClient, read-only" style="rounded=1;fontSize=11;fillColor=#fff4e5;strokeColor=#e9730c;" vertex="1" parent="1">
+          <mxGeometry x="616" y="258" width="488" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3" value="POST /run - scope JobRunner (Job Scheduling only)" style="rounded=1;fontSize=11;fillColor=#eaf3fc;strokeColor=#0a6ed1;" vertex="1" parent="1">
+          <mxGeometry x="616" y="296" width="488" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="sync" value="&lt;b&gt;&lt;font color=&quot;#1a9d6c&quot;&gt;Scheduled sync (every 60 s)&lt;/font&gt;&lt;/b&gt;" style="rounded=1;arcSize=4;html=1;verticalAlign=top;fontSize=12;fillColor=#f0fbf6;strokeColor=#1a9d6c;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="616" y="338" width="488" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="s1" value="Pull job runs and logs from Cloud ALM (watermark + overlap)" style="rounded=1;fontSize=11;fillColor=#ffffff;strokeColor=#1a9d6c;" vertex="1" parent="1">
+          <mxGeometry x="632" y="366" width="456" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="s2" value="Parse, classify status (Success / Error / Warning / In Process)" style="rounded=1;fontSize=11;fillColor=#ffffff;strokeColor=#1a9d6c;" vertex="1" parent="1">
+          <mxGeometry x="632" y="396" width="456" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="s3" value="Upsert duplicate-safe runs and events in one transaction" style="rounded=1;fontSize=11;fillColor=#ffffff;strokeColor=#1a9d6c;" vertex="1" parent="1">
+          <mxGeometry x="632" y="426" width="456" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="s4" value="Warn schedulers: one grouped e-mail per scheduler, no repeats" style="rounded=1;fontSize=11;fillColor=#ffffff;strokeColor=#1a9d6c;" vertex="1" parent="1">
+          <mxGeometry x="632" y="456" width="456" height="24" as="geometry"/>
+        </mxCell>
+
+        <!-- HANA -->
+        <mxCell id="hana" value="&lt;b&gt;&lt;font color=&quot;#1a9d6c&quot; style=&quot;font-size:14px&quot;&gt;SAP HANA Cloud&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:11px&quot; color=&quot;#5b738b&quot;&gt;HDI container cloud-alm-job-monitor-db&lt;/font&gt;" style="rounded=1;arcSize=5;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#ffffff;strokeColor=#1a9d6c;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="600" y="540" width="300" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="h1" value="JobRuns, JobRunEvents" style="rounded=1;fontSize=11;fillColor=#f0fbf6;strokeColor=#1a9d6c;" vertex="1" parent="1">
+          <mxGeometry x="616" y="588" width="268" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="h2" value="SyncState (watermark), SyncRuns (audit)" style="rounded=1;fontSize=11;fillColor=#f0fbf6;strokeColor=#1a9d6c;" vertex="1" parent="1">
+          <mxGeometry x="616" y="616" width="268" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="h3" value="Single data source for dashboard and A2A" style="text;html=1;fontSize=10;fontColor=#5b738b;align=center;" vertex="1" parent="1">
+          <mxGeometry x="616" y="650" width="268" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- Job Scheduling -->
+        <mxCell id="jobs" value="&lt;b&gt;&lt;font style=&quot;font-size:14px&quot;&gt;SAP Job Scheduling Service&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:11px&quot; color=&quot;#5b738b&quot;&gt;jobscheduler (standard) - cloud-alm-job-monitor-scheduler&lt;br&gt;Calls POST /run with scope JobRunner&lt;/font&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#5b738b;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="220" y="580" width="300" height="90" as="geometry"/>
+        </mxCell>
+
+        <!-- Destination -->
+        <mxCell id="dest" value="&lt;b&gt;&lt;font style=&quot;font-size:14px&quot;&gt;SAP Destination Service&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:11px&quot; color=&quot;#5b738b&quot;&gt;cloud-alm-job-monitor-destination&lt;/font&gt;" style="rounded=1;arcSize=5;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#ffffff;strokeColor=#5b738b;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="930" y="540" width="240" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="d1" value="CLOUD_ALM_API (OAuth2 CC)" style="rounded=1;fontSize=11;fillColor=#f5f6f7;strokeColor=#89919a;" vertex="1" parent="1">
+          <mxGeometry x="946" y="588" width="208" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="d2" value="JOB_FAILURE_AI_AGENT" style="rounded=1;fontSize=11;fillColor=#f5f6f7;strokeColor=#89919a;" vertex="1" parent="1">
+          <mxGeometry x="946" y="616" width="208" height="22" as="geometry"/>
+        </mxCell>
+        <mxCell id="d3" value="JOB_FAILURE_MAIL" style="rounded=1;fontSize=11;fillColor=#f5f6f7;strokeColor=#89919a;" vertex="1" parent="1">
+          <mxGeometry x="946" y="644" width="208" height="22" as="geometry"/>
+        </mxCell>
+
+        <!-- Network -->
+        <mxCell id="net" value="" style="rounded=1;arcSize=2;fillColor=#ffffff;strokeColor=#5b738b;strokeWidth=1.5;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="110" width="340" height="620" as="geometry"/>
+        </mxCell>
+        <mxCell id="net_lbl" value="&lt;b&gt;NETWORK&lt;/b&gt;" style="text;html=1;fontSize=12;fontColor=#5b738b;align=left;" vertex="1" parent="1">
+          <mxGeometry x="1250" y="84" width="120" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="alm" value="&lt;b&gt;&lt;font color=&quot;#0a6ed1&quot; style=&quot;font-size:14px&quot;&gt;SAP Cloud ALM&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:11px&quot; color=&quot;#5b738b&quot;&gt;Job and Automation Monitoring&lt;/font&gt;" style="rounded=1;arcSize=5;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=#f4f9fe;strokeColor=#0a6ed1;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1262" y="140" width="296" height="170" as="geometry"/>
+        </mxCell>
+        <mxCell id="al1" value="Analytics API (job run analytics)" style="rounded=1;fontSize=11;fillColor=#ffffff;strokeColor=#0a6ed1;" vertex="1" parent="1">
+          <mxGeometry x="1278" y="192" width="264" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="al2" value="Logs API (calm-logs, OTLP JSON)" style="rounded=1;fontSize=11;fillColor=#ffffff;strokeColor=#0a6ed1;" vertex="1" parent="1">
+          <mxGeometry x="1278" y="226" width="264" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="al3" value="Read-only, technical OAuth client&lt;br&gt;scopes via destination CLOUD_ALM_API" style="text;html=1;fontSize=10;fontColor=#5b738b;align=center;" vertex="1" parent="1">
+          <mxGeometry x="1278" y="262" width="264" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="ai" value="&lt;b&gt;&lt;font color=&quot;#e9730c&quot; style=&quot;font-size:14px&quot;&gt;SAP AI Core / Generative AI Hub&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:11px&quot; color=&quot;#5b738b&quot;&gt;Grounded model (SAP Help documentation)&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;Failure explanation: max two likely causes&lt;br&gt;and documented resolution steps&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot; color=&quot;#5b738b&quot;&gt;Not used to compute figures&lt;/font&gt;" style="rounded=1;arcSize=5;whiteSpace=wrap;html=1;fillColor=#fff4e5;strokeColor=#e9730c;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1262" y="340" width="296" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="mail" value="&lt;b&gt;&lt;font style=&quot;font-size:14px&quot;&gt;Microsoft Graph (Mail)&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:11px&quot; color=&quot;#5b738b&quot;&gt;Application permission Mail.Send&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size:11px&quot;&gt;One digest e-mail per job scheduler&lt;br&gt;for failed job runs&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size:10px&quot; color=&quot;#5b738b&quot;&gt;Allowed domains: bearingpoint.com, sap.com&lt;/font&gt;" style="rounded=1;arcSize=5;whiteSpace=wrap;html=1;fillColor=#f5f6f7;strokeColor=#5b738b;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1262" y="490" width="296" height="110" as="geometry"/>
+        </mxCell>
+
+        <!-- Edges -->
+        <mxCell id="f1" value="1 HTTPS" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#0a6ed1;strokeWidth=2;endArrow=block;fontColor=#0a6ed1;fontStyle=1;" edge="1" parent="1" source="browser" target="router">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="f2" value="2 /odata + JWT" style="strokeColor=#0a6ed1;strokeWidth=2;endArrow=block;fontColor=#0a6ed1;fontStyle=1;" edge="1" parent="1" source="r1" target="c1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="f3" value="3 POST /a2a" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#e9730c;strokeWidth=2;endArrow=block;fontColor=#e9730c;fontStyle=1;" edge="1" parent="1" source="a2a" target="cap">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="f4" value="4 read" style="strokeColor=#0a6ed1;strokeWidth=2;endArrow=block;fontColor=#0a6ed1;fontStyle=1;" edge="1" parent="1" source="hana" target="cap">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="780" y="540" as="sourcePoint"/><mxPoint x="780" y="500" as="targetPoint"/></mxGeometry>
+        </mxCell>
+        <mxCell id="fB" value="B upsert" style="strokeColor=#1a9d6c;strokeWidth=2;endArrow=block;fontColor=#1a9d6c;fontStyle=1;" edge="1" parent="1" source="sync" target="hana">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="700" y="488" as="sourcePoint"/><mxPoint x="700" y="540" as="targetPoint"/></mxGeometry>
+        </mxCell>
+        <mxCell id="fC" value="C POST /run" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#1a9d6c;strokeWidth=2;endArrow=block;fontColor=#1a9d6c;fontStyle=1;" edge="1" parent="1" source="jobs" target="cap">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="560" y="625"/><mxPoint x="560" y="525"/><mxPoint x="640" y="525"/></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="fx" value="login / token" style="strokeColor=#a100c2;strokeWidth=1.5;dashed=1;endArrow=block;fontColor=#a100c2;" edge="1" parent="1" source="router" target="xsuaa">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="fv" value="validate JWT" style="strokeColor=#a100c2;strokeWidth=1.5;dashed=1;endArrow=block;fontColor=#a100c2;" edge="1" parent="1" source="xsuaa" target="cap">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="520" y="470" as="sourcePoint"/><mxPoint x="600" y="470" as="targetPoint"/></mxGeometry>
+        </mxCell>
+        <mxCell id="fd" value="technical credentials" style="strokeColor=#5b738b;strokeWidth=2;endArrow=block;fontColor=#5b738b;" edge="1" parent="1" source="cap" target="dest">
+          <mxGeometry relative="1" as="geometry"><mxPoint x="1050" y="500" as="sourcePoint"/><mxPoint x="1050" y="540" as="targetPoint"/></mxGeometry>
+        </mxCell>
+        <mxCell id="fA" value="A pull (read-only)" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#1a9d6c;strokeWidth=2;endArrow=block;fontColor=#1a9d6c;fontStyle=1;" edge="1" parent="1" source="dest" target="alm">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1210" y="615"/><mxPoint x="1210" y="225"/></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="fAI" value="analyze" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#e9730c;strokeWidth=2;endArrow=block;fontColor=#e9730c;" edge="1" parent="1" source="dest" target="ai">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1210" y="635"/><mxPoint x="1210" y="400"/></Array></mxGeometry>
+        </mxCell>
+        <mxCell id="fM" value="send mail" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#5b738b;strokeWidth=2;endArrow=block;fontColor=#5b738b;" edge="1" parent="1" source="dest" target="mail">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1210" y="655"/><mxPoint x="1210" y="545"/></Array></mxGeometry>
+        </mxCell>
+
+        <!-- Flow boxes -->
+        <mxCell id="flow1" value="&lt;b&gt;&lt;font color=&quot;#0a6ed1&quot; style=&quot;font-size:14px&quot;&gt;Flow 1 - Dashboard&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#5b738b&quot;&gt;Interactive, user token&lt;/font&gt;&lt;br&gt;&lt;br&gt;1. The user opens the approuter URL and signs in through XSUAA.&lt;br&gt;2. The approuter forwards /odata calls with the user JWT to CAP.&lt;br&gt;4. CAP validates the JWT (scope User) and reads HANA only." style="rounded=1;arcSize=4;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=14;spacingTop=8;fontSize=11;fillColor=#eaf3fc;strokeColor=#0a6ed1;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="30" y="760" width="500" height="210" as="geometry"/>
+        </mxCell>
+        <mxCell id="flow2" value="&lt;b&gt;&lt;font color=&quot;#1a9d6c&quot; style=&quot;font-size:14px&quot;&gt;Flow 2 - Scheduled sync and warnings&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#5b738b&quot;&gt;Technical, no user&lt;/font&gt;&lt;br&gt;&lt;br&gt;A. Every 60 s CAP reads Cloud ALM via destination CLOUD_ALM_API.&lt;br&gt;B. New and changed runs are upserted into HANA in one transaction.&lt;br&gt;C. Job Scheduling can also trigger POST /run (scope JobRunner).&lt;br&gt;Failures trigger one grouped e-mail per scheduler." style="rounded=1;arcSize=4;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=14;spacingTop=8;fontSize=11;fillColor=#f0fbf6;strokeColor=#1a9d6c;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="550" y="760" width="500" height="210" as="geometry"/>
+        </mxCell>
+        <mxCell id="flow3" value="&lt;b&gt;&lt;font color=&quot;#e9730c&quot; style=&quot;font-size:14px&quot;&gt;Flow 3 - A2A&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#5b738b&quot;&gt;Machine OAuth client&lt;/font&gt;&lt;br&gt;&lt;br&gt;3. An agent calls POST /a2a with a token carrying scope A2AClient.&lt;br&gt;CAP answers from persisted HANA data only (read-only);&lt;br&gt;it never calls Cloud ALM on demand." style="rounded=1;arcSize=4;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacingLeft=14;spacingTop=8;fontSize=11;fillColor=#fff4e5;strokeColor=#e9730c;strokeWidth=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1070" y="760" width="500" height="210" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

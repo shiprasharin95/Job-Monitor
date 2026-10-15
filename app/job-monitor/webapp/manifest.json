@@ -1,0 +1,99 @@
+{
+  "_version": "1.59.0",
+  "sap.app": {
+    "id": "job.monitor",
+    "type": "application",
+    "title": "Job Failure Monitor",
+    "description": "Failed SAP S/4HANA Cloud application jobs from SAP Cloud ALM, with job-log error reasons and AI analysis",
+    "applicationVersion": { "version": "1.0.0" },
+    "dataSources": {
+      "mainService": {
+        "uri": "/odata/v4/job-monitor/",
+        "type": "OData",
+        "settings": { "odataVersion": "4.0" }
+      }
+    },
+    "crossNavigation": {
+      "inbounds": {
+        "jobmonitor-display": {
+          "semanticObject": "JobFailureMonitor",
+          "action": "display",
+          "title": "Job Failure Monitor",
+          "signature": { "parameters": {}, "additionalParameters": "allowed" }
+        }
+      }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "fullWidth": true,
+    "deviceTypes": { "desktop": true, "tablet": true, "phone": true }
+  },
+  "sap.ui5": {
+    "flexEnabled": false,
+    "dependencies": {
+      "minUI5Version": "1.120.0",
+      "libs": {
+        "sap.m": {},
+        "sap.f": {},
+        "sap.ui.core": {},
+        "sap.ui.layout": {},
+        "sap.fe.core": {},
+        "sap.fe.macros": {},
+        "sap.fe.templates": {},
+        "sap.viz": {}
+      }
+    },
+    "contentDensities": { "compact": true, "cozy": true },
+    "resources": { "css": [{ "uri": "css/style.css" }] },
+    "models": {
+      "": {
+        "dataSource": "mainService",
+        "preload": true,
+        "settings": {
+          "operationMode": "Server",
+          "autoExpandSelect": true,
+          "earlyRequests": true
+        }
+      }
+    },
+    "routing": {
+      "config": {},
+      "routes": [
+        { "pattern": ":?query:", "name": "JobMonitorMain", "target": "JobMonitorMain" },
+        { "pattern": "JobRuns({key}):?query:", "name": "JobRunsObjectPage", "target": "JobRunsObjectPage" }
+      ],
+      "targets": {
+        "JobMonitorMain": {
+          "type": "Component",
+          "id": "JobMonitorMain",
+          "name": "sap.fe.core.fpm",
+          "options": {
+            "settings": {
+              "viewName": "job.monitor.ext.main.Main",
+              "contextPath": "/JobRuns",
+              "navigation": {
+                "JobRuns": { "detail": { "route": "JobRunsObjectPage" } }
+              }
+            }
+          }
+        },
+        "JobRunsObjectPage": {
+          "type": "Component",
+          "id": "JobRunsObjectPage",
+          "name": "sap.fe.templates.ObjectPage",
+          "options": {
+            "settings": {
+              "contextPath": "/JobRuns",
+              "editableHeaderContent": false
+            }
+          }
+        }
+      }
+    }
+  },
+  "sap.fiori": {
+    "registrationIds": [],
+    "archeType": "analytical"
+  }
+}

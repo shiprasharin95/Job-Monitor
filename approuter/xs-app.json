@@ -1,0 +1,26 @@
+{
+  "welcomeFile": "/job-monitor/webapp/index.html",
+  "logout": { "logoutEndpoint": "/do/logout" },
+  "authenticationMethod": "route",
+  "routes": [
+    {
+      "source": "^/\\.well-known/agent-card\\.json$",
+      "target": "/.well-known/agent-card.json",
+      "destination": "srv-api",
+      "authenticationType": "none"
+    },
+    {
+      "source": "^/odata/(.*)$",
+      "target": "/odata/$1",
+      "destination": "srv-api",
+      "authenticationType": "xsuaa",
+      "csrfProtection": false
+    },
+    {
+      "source": "^/(.*)$",
+      "target": "/$1",
+      "destination": "srv-api",
+      "authenticationType": "xsuaa"
+    }
+  ]
+}

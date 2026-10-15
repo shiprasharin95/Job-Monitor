@@ -1,0 +1,217 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="aBlue" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#0a6ed1"/></marker>
+    <marker id="aGreen" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1a9d6c"/></marker>
+    <marker id="aOrange" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e9730c"/></marker>
+    <marker id="aGrey" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#5b738b"/></marker>
+    <marker id="aPurple" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#a100c2"/></marker>
+  </defs>
+
+  <rect width="1600" height="1000" fill="#ffffff"/>
+
+  <text x="30" y="40" font-size="24" font-weight="bold" fill="#0a6ed1">Job Monitor Agent on SAP BTP</text>
+  <text x="30" y="64" font-size="13" fill="#32363a">A CAP application that pulls scheduled job runs from SAP Cloud ALM into SAP HANA Cloud, shows failures in a dashboard,</text>
+  <text x="30" y="82" font-size="13" fill="#32363a">explains them with an AI agent and warns job schedulers by e-mail. Users and agents only read the persisted data.</text>
+
+  <!-- A2A client -->
+  <rect x="640" y="30" width="300" height="52" rx="8" fill="#fff4e5" stroke="#e9730c" stroke-width="1.5"/>
+  <text x="790" y="53" font-size="13" font-weight="bold" text-anchor="middle" fill="#32363a">A2A client (Joule / other agent)</text>
+  <text x="790" y="71" font-size="11" text-anchor="middle" fill="#5b738b">machine OAuth client with scope A2AClient</text>
+  <line x1="790" y1="82" x2="790" y2="170" stroke="#e9730c" stroke-width="2" marker-end="url(#aOrange)"/>
+  <text x="800" y="128" font-size="11" fill="#e9730c">POST /a2a</text>
+  <circle cx="790" cy="108" r="11" fill="#e9730c"/><text x="790" y="112" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">3</text>
+
+  <!-- User -->
+  <circle cx="80" cy="262" r="26" fill="#eaf3fc" stroke="#0a6ed1" stroke-width="2"/>
+  <circle cx="80" cy="254" r="9" fill="#0a6ed1"/>
+  <path d="M62,278 Q80,260 98,278 Z" fill="#0a6ed1"/>
+  <text x="80" y="312" font-size="13" font-weight="bold" text-anchor="middle" fill="#32363a">User</text>
+  <text x="80" y="328" font-size="11" text-anchor="middle" fill="#5b738b">Job operations</text>
+  <rect x="25" y="360" width="110" height="46" rx="6" fill="#f5f6f7" stroke="#89919a"/>
+  <text x="80" y="380" font-size="11" font-weight="bold" text-anchor="middle" fill="#32363a">Web browser</text>
+  <text x="80" y="396" font-size="10" text-anchor="middle" fill="#5b738b">dashboard UI</text>
+  <line x1="80" y1="290" x2="80" y2="360" stroke="#89919a" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <polyline points="135,383 170,383 170,245 220,245" fill="none" stroke="#0a6ed1" stroke-width="2" marker-end="url(#aBlue)"/>
+  <circle cx="170" cy="320" r="11" fill="#0a6ed1"/><text x="170" y="324" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">1</text>
+  <text x="178" y="362" font-size="10" fill="#0a6ed1">HTTPS</text>
+
+  <!-- BTP -->
+  <rect x="190" y="110" width="1000" height="620" rx="12" fill="#f4f9fe" stroke="#0a6ed1" stroke-width="2"/>
+  <rect x="200" y="118" width="120" height="24" rx="4" fill="#0a6ed1"/>
+  <text x="260" y="135" font-size="13" font-weight="bold" text-anchor="middle" fill="#fff">SAP BTP</text>
+  <text x="340" y="135" font-size="12" fill="#5b738b">Subaccount sap-genai | Cloud Foundry eu20, space GenAI</text>
+
+  <!-- Approuter -->
+  <rect x="220" y="170" width="300" height="150" rx="8" fill="#ffffff" stroke="#0a6ed1" stroke-width="1.5"/>
+  <text x="370" y="192" font-size="14" font-weight="bold" text-anchor="middle" fill="#0a6ed1">Approuter + Dashboard UI</text>
+  <text x="370" y="208" font-size="11" text-anchor="middle" fill="#5b738b">cloud-alm-job-monitor-router (@sap/approuter)</text>
+  <rect x="236" y="220" width="268" height="26" rx="4" fill="#eaf3fc" stroke="#0a6ed1"/>
+  <text x="370" y="238" font-size="11" text-anchor="middle" fill="#32363a">Failed job monitor: KPIs, failed jobs, detail</text>
+  <rect x="236" y="254" width="268" height="26" rx="4" fill="#eaf3fc" stroke="#0a6ed1"/>
+  <text x="370" y="272" font-size="11" text-anchor="middle" fill="#32363a">Analyze with SAP AI agent (button)</text>
+  <rect x="236" y="288" width="268" height="22" rx="4" fill="#f0fbf6" stroke="#1a9d6c"/>
+  <text x="370" y="303" font-size="11" text-anchor="middle" fill="#32363a">XSUAA login, JWT forwarded to CAP</text>
+
+  <!-- XSUAA -->
+  <rect x="220" y="380" width="300" height="130" rx="8" fill="#ffffff" stroke="#a100c2" stroke-width="1.5"/>
+  <text x="370" y="402" font-size="14" font-weight="bold" text-anchor="middle" fill="#a100c2">SAP Authorization &amp; Trust Mgmt</text>
+  <text x="370" y="418" font-size="11" text-anchor="middle" fill="#5b738b">XSUAA (application plan)</text>
+  <rect x="236" y="428" width="268" height="22" rx="4" fill="#f9eefc" stroke="#a100c2"/>
+  <text x="370" y="443" font-size="11" text-anchor="middle" fill="#32363a">Role collections: JobFailureMonitor_Viewer / _Admin</text>
+  <rect x="236" y="456" width="268" height="22" rx="4" fill="#f9eefc" stroke="#a100c2"/>
+  <text x="370" y="471" font-size="11" text-anchor="middle" fill="#32363a">Scopes: User, Admin, JobRunner, A2AClient</text>
+  <text x="370" y="497" font-size="10" text-anchor="middle" fill="#5b738b">Users get access only through role collections</text>
+  <line x1="370" y1="320" x2="370" y2="380" stroke="#a100c2" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#aPurple)"/>
+  <text x="378" y="355" font-size="10" fill="#a100c2">login / token</text>
+
+  <!-- CAP -->
+  <rect x="600" y="170" width="520" height="330" rx="8" fill="#ffffff" stroke="#0a6ed1" stroke-width="2"/>
+  <text x="860" y="192" font-size="14" font-weight="bold" text-anchor="middle" fill="#0a6ed1">Job Failure Dashboard (CAP Node.js)</text>
+  <text x="860" y="208" font-size="11" text-anchor="middle" fill="#5b738b">JOB_Failure_Dashboard | 1 instance | scheduler runs in-process</text>
+  <rect x="616" y="220" width="488" height="30" rx="4" fill="#eaf3fc" stroke="#0a6ed1"/>
+  <text x="860" y="239" font-size="11" text-anchor="middle" fill="#32363a">OData V4 /odata/v4/job-monitor (summary, jobErrors, analyzeJob) - scope User</text>
+  <rect x="616" y="258" width="488" height="30" rx="4" fill="#fff4e5" stroke="#e9730c"/>
+  <text x="860" y="277" font-size="11" text-anchor="middle" fill="#32363a">A2A server POST /a2a + public agent card - scope A2AClient, read-only</text>
+  <rect x="616" y="296" width="488" height="30" rx="4" fill="#eaf3fc" stroke="#0a6ed1"/>
+  <text x="860" y="315" font-size="11" text-anchor="middle" fill="#32363a">POST /run - scope JobRunner (Job Scheduling only)</text>
+  <rect x="616" y="338" width="488" height="150" rx="6" fill="#f0fbf6" stroke="#1a9d6c" stroke-width="1.5"/>
+  <text x="860" y="357" font-size="12" font-weight="bold" text-anchor="middle" fill="#1a9d6c">Scheduled sync (every 60 s)</text>
+  <rect x="632" y="366" width="456" height="24" rx="4" fill="#ffffff" stroke="#1a9d6c"/>
+  <text x="860" y="382" font-size="11" text-anchor="middle" fill="#32363a">Pull job runs and logs from Cloud ALM (watermark + overlap)</text>
+  <rect x="632" y="396" width="456" height="24" rx="4" fill="#ffffff" stroke="#1a9d6c"/>
+  <text x="860" y="412" font-size="11" text-anchor="middle" fill="#32363a">Parse, classify status (Success / Error / Warning / In Process)</text>
+  <rect x="632" y="426" width="456" height="24" rx="4" fill="#ffffff" stroke="#1a9d6c"/>
+  <text x="860" y="442" font-size="11" text-anchor="middle" fill="#32363a">Upsert duplicate-safe runs and events in one transaction</text>
+  <rect x="632" y="456" width="456" height="24" rx="4" fill="#ffffff" stroke="#1a9d6c"/>
+  <text x="860" y="472" font-size="11" text-anchor="middle" fill="#32363a">Warn schedulers: one grouped e-mail per scheduler, no repeats</text>
+
+  <line x1="520" y1="245" x2="600" y2="245" stroke="#0a6ed1" stroke-width="2" marker-end="url(#aBlue)"/>
+  <circle cx="560" cy="232" r="11" fill="#0a6ed1"/><text x="560" y="236" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">2</text>
+  <text x="528" y="262" font-size="10" fill="#0a6ed1">/odata + JWT</text>
+
+  <line x1="520" y1="470" x2="600" y2="470" stroke="#a100c2" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#aPurple)"/>
+  <text x="528" y="462" font-size="10" fill="#a100c2">validate JWT</text>
+
+  <!-- HANA -->
+  <rect x="600" y="540" width="300" height="150" rx="8" fill="#ffffff" stroke="#1a9d6c" stroke-width="1.5"/>
+  <text x="750" y="562" font-size="14" font-weight="bold" text-anchor="middle" fill="#1a9d6c">SAP HANA Cloud</text>
+  <text x="750" y="578" font-size="11" text-anchor="middle" fill="#5b738b">HDI container cloud-alm-job-monitor-db</text>
+  <rect x="616" y="588" width="268" height="22" rx="4" fill="#f0fbf6" stroke="#1a9d6c"/>
+  <text x="750" y="603" font-size="11" text-anchor="middle" fill="#32363a">JobRuns, JobRunEvents</text>
+  <rect x="616" y="616" width="268" height="22" rx="4" fill="#f0fbf6" stroke="#1a9d6c"/>
+  <text x="750" y="631" font-size="11" text-anchor="middle" fill="#32363a">SyncState (watermark), SyncRuns (audit)</text>
+  <text x="750" y="662" font-size="10" text-anchor="middle" fill="#5b738b">Single data source for dashboard and A2A</text>
+  <line x1="750" y1="500" x2="750" y2="540" stroke="#1a9d6c" stroke-width="2" marker-end="url(#aGreen)"/>
+  <line x1="770" y1="540" x2="770" y2="500" stroke="#0a6ed1" stroke-width="2" marker-end="url(#aBlue)"/>
+  <circle cx="800" cy="520" r="11" fill="#0a6ed1"/><text x="800" y="524" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">4</text>
+  <circle cx="710" cy="520" r="11" fill="#1a9d6c"/><text x="710" y="524" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">B</text>
+
+  <!-- Job Scheduling -->
+  <rect x="220" y="580" width="300" height="90" rx="8" fill="#ffffff" stroke="#5b738b" stroke-width="1.5"/>
+  <text x="370" y="604" font-size="14" font-weight="bold" text-anchor="middle" fill="#32363a">SAP Job Scheduling Service</text>
+  <text x="370" y="622" font-size="11" text-anchor="middle" fill="#5b738b">jobscheduler (standard) - cloud-alm-job-monitor-scheduler</text>
+  <text x="370" y="640" font-size="11" text-anchor="middle" fill="#5b738b">Calls POST /run with scope JobRunner</text>
+  <polyline points="520,625 560,625 560,525 640,525 640,500" fill="none" stroke="#1a9d6c" stroke-width="2" marker-end="url(#aGreen)"/>
+  <text x="552" y="563" font-size="10" text-anchor="end" fill="#1a9d6c">POST /run</text>
+  <circle cx="590" cy="525" r="11" fill="#1a9d6c"/><text x="590" y="529" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">C</text>
+
+  <!-- Destination -->
+  <rect x="930" y="540" width="240" height="150" rx="8" fill="#ffffff" stroke="#5b738b" stroke-width="1.5"/>
+  <text x="1050" y="562" font-size="14" font-weight="bold" text-anchor="middle" fill="#32363a">SAP Destination Service</text>
+  <text x="1050" y="578" font-size="11" text-anchor="middle" fill="#5b738b">cloud-alm-job-monitor-destination</text>
+  <rect x="946" y="588" width="208" height="22" rx="4" fill="#f5f6f7" stroke="#89919a"/>
+  <text x="1050" y="603" font-size="11" text-anchor="middle" fill="#32363a">CLOUD_ALM_API (OAuth2 CC)</text>
+  <rect x="946" y="616" width="208" height="22" rx="4" fill="#f5f6f7" stroke="#89919a"/>
+  <text x="1050" y="631" font-size="11" text-anchor="middle" fill="#32363a">JOB_FAILURE_AI_AGENT</text>
+  <rect x="946" y="644" width="208" height="22" rx="4" fill="#f5f6f7" stroke="#89919a"/>
+  <text x="1050" y="659" font-size="11" text-anchor="middle" fill="#32363a">JOB_FAILURE_MAIL</text>
+  <line x1="1050" y1="500" x2="1050" y2="540" stroke="#5b738b" stroke-width="2" marker-end="url(#aGrey)"/>
+  <text x="1058" y="524" font-size="10" fill="#5b738b">technical credentials</text>
+
+  <!-- External bus -->
+  <polyline points="1170,615 1210,615 1210,545" fill="none" stroke="#5b738b" stroke-width="2"/>
+  <line x1="1210" y1="615" x2="1210" y2="225" stroke="#5b738b" stroke-width="2"/>
+  <line x1="1210" y1="225" x2="1262" y2="225" stroke="#1a9d6c" stroke-width="2" marker-end="url(#aGreen)"/>
+  <line x1="1210" y1="395" x2="1262" y2="395" stroke="#e9730c" stroke-width="2" marker-end="url(#aOrange)"/>
+  <line x1="1210" y1="545" x2="1262" y2="545" stroke="#5b738b" stroke-width="2" marker-end="url(#aGrey)"/>
+  <circle cx="1236" cy="210" r="11" fill="#1a9d6c"/><text x="1236" y="214" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">A</text>
+
+  <!-- Network -->
+  <rect x="1240" y="110" width="340" height="620" rx="10" fill="#ffffff" stroke="#5b738b" stroke-width="1.5" stroke-dasharray="8 5"/>
+  <text x="1250" y="104" font-size="12" font-weight="bold" fill="#5b738b">NETWORK</text>
+
+  <rect x="1262" y="140" width="296" height="170" rx="8" fill="#f4f9fe" stroke="#0a6ed1" stroke-width="1.5"/>
+  <text x="1410" y="164" font-size="14" font-weight="bold" text-anchor="middle" fill="#0a6ed1">SAP Cloud ALM</text>
+  <text x="1410" y="180" font-size="11" text-anchor="middle" fill="#5b738b">Job and Automation Monitoring</text>
+  <rect x="1278" y="192" width="264" height="26" rx="4" fill="#ffffff" stroke="#0a6ed1"/>
+  <text x="1410" y="209" font-size="11" text-anchor="middle" fill="#32363a">Analytics API (job run analytics)</text>
+  <rect x="1278" y="226" width="264" height="26" rx="4" fill="#ffffff" stroke="#0a6ed1"/>
+  <text x="1410" y="243" font-size="11" text-anchor="middle" fill="#32363a">Logs API (calm-logs, OTLP JSON)</text>
+  <text x="1410" y="278" font-size="10" text-anchor="middle" fill="#5b738b">Read-only, technical OAuth client</text>
+  <text x="1410" y="294" font-size="10" text-anchor="middle" fill="#5b738b">scopes via destination CLOUD_ALM_API</text>
+
+  <rect x="1262" y="340" width="296" height="120" rx="8" fill="#fff4e5" stroke="#e9730c" stroke-width="1.5"/>
+  <text x="1410" y="364" font-size="14" font-weight="bold" text-anchor="middle" fill="#e9730c">SAP AI Core / Generative AI Hub</text>
+  <text x="1410" y="382" font-size="11" text-anchor="middle" fill="#5b738b">Grounded model (SAP Help documentation)</text>
+  <text x="1410" y="404" font-size="11" text-anchor="middle" fill="#32363a">Failure explanation: max two likely causes</text>
+  <text x="1410" y="420" font-size="11" text-anchor="middle" fill="#32363a">and documented resolution steps</text>
+  <text x="1410" y="444" font-size="10" text-anchor="middle" fill="#5b738b">Not used to compute figures</text>
+
+  <rect x="1262" y="490" width="296" height="110" rx="8" fill="#f5f6f7" stroke="#5b738b" stroke-width="1.5"/>
+  <text x="1410" y="514" font-size="14" font-weight="bold" text-anchor="middle" fill="#32363a">Microsoft Graph (Mail)</text>
+  <text x="1410" y="534" font-size="11" text-anchor="middle" fill="#5b738b">Application permission Mail.Send</text>
+  <text x="1410" y="552" font-size="11" text-anchor="middle" fill="#32363a">One digest e-mail per job scheduler</text>
+  <text x="1410" y="568" font-size="11" text-anchor="middle" fill="#32363a">for failed job runs</text>
+  <text x="1410" y="588" font-size="10" text-anchor="middle" fill="#5b738b">Allowed domains: bearingpoint.com, sap.com</text>
+
+  <!-- Flows -->
+  <rect x="30" y="760" width="500" height="210" rx="8" fill="#eaf3fc" stroke="#0a6ed1" stroke-width="1.5"/>
+  <text x="46" y="784" font-size="14" font-weight="bold" fill="#0a6ed1">Flow 1 - Dashboard</text>
+  <text x="46" y="802" font-size="11" fill="#5b738b">Interactive, user token</text>
+  <circle cx="56" cy="826" r="10" fill="#0a6ed1"/><text x="56" y="830" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">1</text>
+  <text x="76" y="830" font-size="11" fill="#32363a">The user opens the approuter URL and signs in through XSUAA.</text>
+  <circle cx="56" cy="854" r="10" fill="#0a6ed1"/><text x="56" y="858" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">2</text>
+  <text x="76" y="858" font-size="11" fill="#32363a">The approuter forwards the JWT; CAP requires scope User.</text>
+  <circle cx="56" cy="882" r="10" fill="#0a6ed1"/><text x="56" y="886" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">4</text>
+  <text x="76" y="886" font-size="11" fill="#32363a">CAP reads persisted job runs from HANA, never from Cloud ALM.</text>
+  <text x="76" y="910" font-size="11" fill="#32363a">Analyze job sends the failed run to the AI agent via its destination.</text>
+  <text x="46" y="946" font-size="10" fill="#5b738b">Access: add the user to role collection JobFailureMonitor_Viewer or _Admin.</text>
+
+  <rect x="550" y="760" width="520" height="210" rx="8" fill="#f0fbf6" stroke="#1a9d6c" stroke-width="1.5"/>
+  <text x="566" y="784" font-size="14" font-weight="bold" fill="#1a9d6c">Flow 2 - Scheduled sync and warnings</text>
+  <text x="566" y="802" font-size="11" fill="#5b738b">Automatic, technical credentials only</text>
+  <circle cx="576" cy="826" r="10" fill="#1a9d6c"/><text x="576" y="830" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">A</text>
+  <text x="596" y="830" font-size="11" fill="#32363a">Every 60 s CAP calls the Cloud ALM APIs via CLOUD_ALM_API.</text>
+  <circle cx="576" cy="854" r="10" fill="#1a9d6c"/><text x="576" y="858" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">B</text>
+  <text x="596" y="858" font-size="11" fill="#32363a">Runs and events are parsed and upserted into HANA with a watermark.</text>
+  <circle cx="576" cy="882" r="10" fill="#1a9d6c"/><text x="576" y="886" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">C</text>
+  <text x="596" y="886" font-size="11" fill="#32363a">Job Scheduling calls POST /run (JobRunner); failures are grouped</text>
+  <text x="596" y="902" font-size="11" fill="#32363a">per scheduler and sent once through Microsoft Graph.</text>
+  <text x="566" y="946" font-size="10" fill="#5b738b">Cloud ALM credentials stay in the Destination service; the app never stores them.</text>
+
+  <rect x="1090" y="760" width="230" height="210" rx="8" fill="#fff4e5" stroke="#e9730c" stroke-width="1.5"/>
+  <text x="1104" y="784" font-size="14" font-weight="bold" fill="#e9730c">Flow 3 - A2A</text>
+  <text x="1104" y="802" font-size="11" fill="#5b738b">Machine client, read-only</text>
+  <circle cx="1114" cy="826" r="10" fill="#e9730c"/><text x="1114" y="830" font-size="11" font-weight="bold" text-anchor="middle" fill="#fff">3</text>
+  <text x="1132" y="830" font-size="11" fill="#32363a">Agent calls POST /a2a</text>
+  <text x="1104" y="850" font-size="11" fill="#32363a">with scope A2AClient.</text>
+  <text x="1104" y="878" font-size="11" fill="#32363a">CAP answers from HANA:</text>
+  <text x="1104" y="894" font-size="11" fill="#32363a">counts, success rate,</text>
+  <text x="1104" y="910" font-size="11" fill="#32363a">top error, dashboard link.</text>
+
+  <!-- Legend -->
+  <rect x="1340" y="760" width="230" height="210" rx="8" fill="#ffffff" stroke="#89919a" stroke-width="1.5"/>
+  <text x="1356" y="784" font-size="14" font-weight="bold" fill="#32363a">Legend</text>
+  <line x1="1356" y1="808" x2="1406" y2="808" stroke="#0a6ed1" stroke-width="2" marker-end="url(#aBlue)"/>
+  <text x="1416" y="812" font-size="11" fill="#32363a">User path (JWT)</text>
+  <line x1="1356" y1="832" x2="1406" y2="832" stroke="#1a9d6c" stroke-width="2" marker-end="url(#aGreen)"/>
+  <text x="1416" y="836" font-size="11" fill="#32363a">Sync / data write</text>
+  <line x1="1356" y1="856" x2="1406" y2="856" stroke="#e9730c" stroke-width="2" marker-end="url(#aOrange)"/>
+  <text x="1416" y="860" font-size="11" fill="#32363a">A2A / AI call</text>
+  <line x1="1356" y1="880" x2="1406" y2="880" stroke="#5b738b" stroke-width="2" marker-end="url(#aGrey)"/>
+  <text x="1416" y="884" font-size="11" fill="#32363a">Technical credentials</text>
+  <line x1="1356" y1="904" x2="1406" y2="904" stroke="#a100c2" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#aPurple)"/>
+  <text x="1416" y="908" font-size="11" fill="#32363a">Authentication</text>
+  <text x="1356" y="940" font-size="10" fill="#5b738b">Numbers 1-4: user flows</text>
+  <text x="1356" y="956" font-size="10" fill="#5b738b">Letters A-C: scheduled sync</text>
+</svg>

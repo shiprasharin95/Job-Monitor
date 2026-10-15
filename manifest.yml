@@ -1,0 +1,28 @@
+applications:
+  - name: JOB_Failure_Dashboard
+    memory: 256M
+    disk_quota: 512M
+    instances: 1
+    stack: cflinuxfs5
+    buildpacks:
+      - nodejs_buildpack
+    command: npm start
+    routes:
+      - route: job-failure-monitor-srv.cfapps.eu20-001.hana.ondemand.com
+    services:
+      - cloud-alm-job-monitor-destination
+      - cloud-alm-job-monitor-xsuaa
+      - cloud-alm-job-monitor-db
+      - cloud-alm-job-monitor-scheduler
+    env:
+      NODE_ENV: production
+      ALLOWED_NOTIFICATION_DOMAINS: bearingpoint.com,sap.com
+      NOTIFICATION_REPEAT_WORKING_DAYS: 5
+      CLOUD_ALM_INITIAL_LOOKBACK_DAYS: 7
+      CLOUD_ALM_SOURCE_MODE: ANALYTICS
+      CLOUD_ALM_SERVICE_IDS: 802b3bea-d94c-4c32-bcd2-e7517a7788fc
+      DEFAULT_SCHEDULER_EMAIL: shipra.sharin@bearingpoint.com
+      DEFAULT_SCHEDULER_NAME: Job Scheduler (my409865)
+      CLOUD_ALM_SYNC_INTERVAL_SECONDS: 60
+      DASHBOARD_URL: https://job-failure-monitor.cfapps.eu20-001.hana.ondemand.com/job-monitor/webapp/index.html
+      MAIL_FROM: cap-notifications@bearingpoint.com
