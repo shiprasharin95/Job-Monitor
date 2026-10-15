@@ -14,7 +14,17 @@ applications:
       - cloud-alm-job-monitor-xsuaa
       - cloud-alm-job-monitor-db
       - cloud-alm-job-monitor-scheduler
+      # IAS application "Job Monitor A2A Agent" (tenant a21ttncfv, same as IDoc / PO monitor agents).
+      - job-monitor-identity
     env:
+      # A2A agent: only IAS tokens for this audience are accepted; the user must be in an IAS group below.
+      IAS_ISSUER: https://a21ttncfv.accounts.ondemand.com
+      # Client ID of the IAS application "Job Monitor A2A Agent" (not a secret).
+      IAS_AUDIENCE: 6921a077-15e1-43e9-8051-6e33b9fab282
+      IAS_REQUIRED_API: none
+      IAS_GROUPS_CLAIM: groups
+      A2A_REQUIRED_GROUPS: JobMonitor_Viewer,JobMonitor_Admin
+      A2A_PUBLIC_URL: https://job-failure-monitor-srv.cfapps.eu20-001.hana.ondemand.com
       NODE_ENV: production
       ALLOWED_NOTIFICATION_DOMAINS: bearingpoint.com,sap.com
       NOTIFICATION_REPEAT_WORKING_DAYS: 5

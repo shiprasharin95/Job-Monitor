@@ -1,0 +1,11 @@
+{
+  "display-name": "Job Monitor A2A Agent",
+  "multi-tenant": false,
+  "xsuaa-cross-consumption": false,
+  "oauth2-configuration": {
+    "token-policy": { "access-token-format": "jwt" }
+  },
+  "provided-apis": [
+    { "name": "job-monitor-read", "description": "Read-only failed-job reports for SAP Joule and orchestrator agents" }
+  ]
+}

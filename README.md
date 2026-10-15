@@ -110,7 +110,7 @@ See `JOB-SCHEDULING.md` for creating the schedule.
 | Item | Setting |
 |---|---|
 | Login | Approuter + XSUAA (`cloud-alm-job-monitor-xsuaa`); the user token is forwarded to CAP. |
-| Scopes | `User` (dashboard incl. Pull from Cloud ALM), `Admin` (reserved), `JobRunner` (scheduler only), `A2AClient` (agent). |
+| Scopes | `User` (dashboard incl. Pull from Cloud ALM), `Admin`, `JobRunner` (scheduler only). The A2A agent uses IAS tokens and groups (section 12). |
 | Role collections | `JobFailureMonitor_Viewer`, `JobFailureMonitor_Admin`. Assign in the BTP cockpit → Security → Role Collections. |
 | Cloud ALM / S/4 / AI / Mail | Technical destinations; credentials stay in the BTP destination service. Cloud ALM has no per-user job authorisations, so no principal propagation is used for data reads. |
 
@@ -215,3 +215,38 @@ JOB-SCHEDULING.md                         Scheduler setup
 - **Joule:** register the A2A agent in Joule Studio.
 - **Roles:** assign `JobFailureMonitor_Viewer` to users (this includes Pull from Cloud ALM).
 - **Credentials:** rotate the Cloud ALM client secret that was shared in chat.
+
+---
+
+## 12. A2A agent and IAS login (same contract as the IDoc Monitor)
+
+**Agent (`srv/a2a/`)** built with `@a2a-js/sdk` 0.3.14, A2A protocol 0.3.0, JSON-RPC `message/send`, no streaming.
+
+| Endpoint | Access |
+|---|---|
+| `GET https://job-failure-monitor-srv.cfapps.eu20-001.hana.ondemand.com/.well-known/agent-card.json` | Public, contains no data |
+| `POST https://job-failure-monitor-srv.cfapps.eu20-001.hana.ondemand.com/a2a` | IAS token required (401 without) |
+
+Request flow:
+1. Joule or an orchestrator agent sends `message/send` through an OAuth2JWTBearer destination (IAS user token).
+2. `auth.js` validates the token against the IAS JWKS: signature, issuer `https://a21ttncfv.accounts.ondemand.com`, audience `6921a077-15e1-43e9-8051-6e33b9fab282` (IAS app "Job Monitor A2A Agent").
+3. `executor.js` checks the `groups` claim. Without `JobMonitor_Viewer` or `JobMonitor_Admin`, or with a technical token, the task state is `rejected` and no data is read.
+4. `report.js` derives the period from the question (1H, 24H default, 7D, 30D) and reads HANA only, the same figures as the dashboard.
+5. The artifact has `parts[0].text` (Markdown summary with dashboard link) and `parts[1].data` (`type: failed_job_report`, period, counts, successRate, topError, failuresByJob, lastSyncAt, dashboardUrl, hasFailures, latestFailedJobs, markdownTable). Errors and refusals return a single text artifact.
+
+**Login model (one source of truth: IAS groups)**
+
+| IAS group | Role collection (same name) | Rights |
+|---|---|---|
+| `JobMonitor_Viewer` | `JobMonitor_Viewer` | Dashboard, Pull from Cloud ALM, ask Joule |
+| `JobMonitor_Admin` | `JobMonitor_Admin` | Viewer rights plus Admin scope |
+
+Map each IAS group to the role collection of the same name in the BTP cockpit (Security → Trust Configuration → IAS → Role Collection Mappings). Grant access only by adding users to the IAS groups; a role collection assigned directly gives the dashboard but not Joule. The old collections `JobFailureMonitor_Viewer/_Admin` remain for existing assignments.
+
+| Resource | Value |
+|---|---|
+| IAS instance | `job-monitor-identity` (identity, plan application), tenant `a21ttncfv` |
+| Env | `IAS_ISSUER`, `IAS_AUDIENCE`, `IAS_REQUIRED_API=none`, `IAS_GROUPS_CLAIM=groups`, `A2A_REQUIRED_GROUPS`, `A2A_PUBLIC_URL` |
+| Tests | `npm test` (7 tests: card, viewer, admin, no group, technical token, wrong audience, no token) |
+
+Open steps for Joule: create the IAS groups, add the proxy dependency Joule → Job Monitor A2A Agent in IAS, create destination `job_monitor_agent_a2a` (OAuth2JWTBearer, URL above) in the Joule subaccount, and add a Joule capability like the IDoc one.

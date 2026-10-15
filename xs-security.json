@@ -50,12 +50,22 @@
   "role-collections": [
     {
       "name": "JobFailureMonitor_Viewer",
-      "description": "Read the Job Failure Monitor dashboard",
+      "description": "Read the Job Failure Monitor dashboard (legacy name, kept for existing assignments)",
       "role-template-references": ["$XSAPPNAME.JobFailureMonitorUser"]
     },
     {
       "name": "JobFailureMonitor_Admin",
-      "description": "Job Failure Monitor - administrator",
+      "description": "Job Failure Monitor - administrator (legacy name, kept for existing assignments)",
+      "role-template-references": ["$XSAPPNAME.JobFailureMonitorAdmin"]
+    },
+    {
+      "name": "JobMonitor_Viewer",
+      "description": "Job Monitor viewer - map the IAS group JobMonitor_Viewer to this role collection (dashboard + Joule)",
+      "role-template-references": ["$XSAPPNAME.JobFailureMonitorUser"]
+    },
+    {
+      "name": "JobMonitor_Admin",
+      "description": "Job Monitor admin - map the IAS group JobMonitor_Admin to this role collection (dashboard + Joule)",
       "role-template-references": ["$XSAPPNAME.JobFailureMonitorAdmin"]
     }
   ]
