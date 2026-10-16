@@ -9,7 +9,8 @@
   "scopes": [
     {
       "name": "$XSAPPNAME.User",
-      "description": "Permission to use the Job Failure Warning Agent"
+      "description": "Permission to use the Job Failure Warning Agent",
+      "granted-apps": ["$XSAPPNAME(application,operations-monitor)"]
     },
     {
       "name": "$XSAPPNAME.Admin",
