@@ -1,6 +1,7 @@
 const { getDestination } = require('@sap-cloud-sdk/connectivity');
 const { executeHttpRequest } = require('@sap-cloud-sdk/http-client');
 const s4JobLog = require('./s4-job-log');
+const businessUser = require('./s4-business-user');
 
 const DESTINATION_NAME = 'CLOUD_ALM_API';
 const MAX_RAW_WINDOW_MS = 60 * 60 * 1000 - 1000;
@@ -266,12 +267,14 @@ async function enrichFailureReasons(settings, records) {
       if (!runs.length) continue;
       const reasons = [];
       let createdBy = '';
+      let createdByUserId = '';
       for (const run of runs.slice(0, 5)) {
         try {
           const log = await s4JobLog.readRunLog(run['sap.jam.run.schedule_id'], run['sap.jam.run.id']);
           if (log) {
             reasons.push(log.reason);
             createdBy = createdBy || log.createdBy;
+            createdByUserId = createdByUserId || log.createdByUserId;
             continue;
           }
         } catch (error) {
@@ -281,10 +284,13 @@ async function enrichFailureReasons(settings, records) {
         if (fallback) reasons.push(fallback);
       }
       const latest = runs[runs.length - 1];
+      // Scheduler e-mail: S/4HANA Business User - Read (SAP_COM_0093) by the job creator's user ID.
+      const user = createdByUserId ? await businessUser.lookupUser(createdByUserId) : null;
       const enrichment = {
         errorText: reasons.length ? [...new Set(reasons)].join('\n') : record.errorText,
         executionId: latest['sap.jam.run.id'],
-        schedulerName: createdBy,
+        schedulerName: user?.fullName || createdBy,
+        schedulerEmail: user?.email || '',
         s4JobName: latest['sap.jam.run.schedule_id'],
         s4JobRunCount: latest['sap.jam.run.id']
       };

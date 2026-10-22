@@ -1,6 +1,6 @@
 const cds = require('@sap/cds');
 const { randomUUID } = require('node:crypto');
-const { runScheduledWarnings } = require('./srv/scheduled-warning-runner');
+const { sendDailyReport } = require('./srv/daily-report');
 const { startSynchronization } = require('./srv/cloud-alm-sync');
 const { mountA2A } = require('./srv/a2a');
 
@@ -27,7 +27,8 @@ cds.on('bootstrap', (app) => {
   // Custom Express routes must run CAP context and authentication middleware first.
   app.post('/run', ...cds.middlewares.before, requireJobRunner, async (req, res) => {
     try {
-      return res.status(200).json({ status: 'OK', source: 'job-scheduler', ...(await runScheduledWarnings()) });
+      // Daily scheduler mail: one e-mail per scheduler, failed jobs of the last 24 h with error reason + AI resolution.
+      return res.status(200).json({ status: 'OK', source: 'job-scheduler', ...(await sendDailyReport({ hours: 24 })) });
     } catch (error) {
       const incidentId = randomUUID();
       console.error('[SCHEDULER] Warning run failed.', { incidentId, errorCode: String(error.code || error.name || 'SCHEDULER_ERROR').slice(0, 80) });

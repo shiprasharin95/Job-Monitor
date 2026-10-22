@@ -132,5 +132,20 @@ service JobMonitorService {
   function testConnection() returns ConnectionStatus;
   function summary(period : String, asOf : String) returns DashboardSummary;
   action analyzeJob(jobId : String, jobName : String) returns JobAnalysis;
+
+  // Daily report: one e-mail per scheduler with all failed jobs of the last `hours` (default 24),
+  // error reason and AI-generated possible resolution. dryRun returns previews without sending.
+  type MailPreview { to : String; scheduler : String; jobCount : Integer; subject : String; text : LargeString; }
+  type MailFailure { scheduler : String; to : String; message : String; }
+  type DailyReportResult {
+    hours      : Integer;
+    inspected  : Integer;
+    schedulers : Integer;
+    mailsSent  : Integer;
+    previews   : array of MailPreview;
+    failures   : array of MailFailure;
+  }
+  @requires: 'Admin'
+  action sendDailyReport(hours : Integer, dryRun : Boolean, suppress : Boolean, recipient : String) returns DailyReportResult;
   action sendSchedulerDigest(schedulerEmail : String, schedulerName : String, failedJobs : LargeString) returns SchedulerDigest;
 }

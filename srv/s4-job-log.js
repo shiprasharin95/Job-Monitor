@@ -45,7 +45,8 @@ async function readRunLog(jobName, runCount) {
   return {
     reason: [...new Set(reasonMessages.map((message) => message.text))].join('\n'),
     messages,
-    createdBy: header?.JobCreatedByFormattedName || header?.JobCreatedBy || ''
+    createdBy: header?.JobCreatedByFormattedName || header?.JobCreatedBy || '',
+    createdByUserId: header?.JobCreatedBy || ''
   };
 }
 

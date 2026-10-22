@@ -3,6 +3,7 @@ const store = require('./job-store');
 const agent = require('./job-failure-agent');
 const s4JobLog = require('./s4-job-log');
 const sync = require('./cloud-alm-sync');
+const dailyReport = require('./daily-report');
 
 const MESSAGE_TYPE = {
   A: { text: 'Abort', criticality: 1 },
@@ -142,6 +143,14 @@ module.exports = (service) => {
     if (!request.data.jobId) return request.error(400, 'jobId is required.');
     return agent.analyze(request.data.jobId, request.data.jobName).catch((error) => fail(request, error));
   });
+
+  service.on('sendDailyReport', (request) =>
+    dailyReport.sendDailyReport({
+      hours: request.data.hours || 24,
+      dryRun: request.data.dryRun === true,
+      suppress: request.data.suppress !== false,
+      recipient: request.data.recipient || undefined
+    }).catch((error) => fail(request, error)));
 
   service.on('sendSchedulerDigest', (request) =>
     agent.sendDigest(request.data.schedulerName, request.data.schedulerEmail, request.data.failedJobs).catch((error) => fail(request, error)));

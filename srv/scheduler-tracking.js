@@ -60,6 +60,11 @@ async function claim(key, schedulerEmail, lastNotified) {
   }
 }
 
+// Removes a claim that was only used for a preview, so a later real send is not blocked.
+async function release(claimKey) {
+  await cds.db.run(cds.ql.DELETE.from(entities().FAILURE_NOTIFICATION_CLAIM).where({ idempotencyKey: claimKey, status: 'CLAIMED' }));
+}
+
 async function complete(claimKey, status, outcomeCode = null) {
   await cds.db.run(UPDATE(entities().FAILURE_NOTIFICATION_CLAIM).set({ status, outcomeCode, completedAt: new Date() }).where({ idempotencyKey: claimKey, status: 'CLAIMED' }));
 }
@@ -73,4 +78,4 @@ async function record(key, schedulerEmail, now = new Date()) {
   await cds.db.run(UPDATE(entities().FAILURE_NOTIFICATION_LOG).set({ schedulerEmail, lastNotified: now, resolved: false, resolvedAt: null }).where({ failureKey: key }));
 }
 
-module.exports = { claim, complete, eligible, failureKey, record };
+module.exports = { claim, complete, eligible, failureKey, record, release };

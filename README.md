@@ -98,7 +98,7 @@ Built like the IDoc Processing Monitor: an FPM custom main page (`sap.fe.core.fp
 
 - `POST /run` (scope `JobRunner`, granted only to the bound SAP Job Scheduling service) groups failed jobs by recipient and sends **one combined e-mail per scheduler**, each job with system, time, error reason and AI analysis.
 - Duplicate protection: a HANA claim is created before sending, and a job is not re-notified for `NOTIFICATION_REPEAT_WORKING_DAYS` (5) working days.
-- Recipient: neither API provides the scheduler's e-mail, so the digest currently goes to `DEFAULT_SCHEDULER_EMAIL`. Only domains in `ALLOWED_NOTIFICATION_DOMAINS` are allowed.
+- Recipient: the job creator's e-mail from S/4HANA **Business User - Read** (SAP_COM_0093, `srv/s4-business-user.js`), looked up by user ID during sync and stored on the run. Creators without an e-mail (e.g. `SAP System Processing`) fall back to `DEFAULT_SCHEDULER_EMAIL`. Only domains in `ALLOWED_NOTIFICATION_DOMAINS` are allowed.
 - Mail is sent through destination `AzureMailService` (`/users/{MAIL_FROM}/sendMail`). A test digest with 3 failed jobs was sent successfully.
 
 See `JOB-SCHEDULING.md` for creating the schedule.
@@ -204,13 +204,14 @@ JOB-SCHEDULING.md                         Scheduler setup
 7. Connected AI analysis to SAP AI Core (GPT-4.1) using the real log messages, and the combined e-mail to Microsoft Graph; both verified end to end.
 8. Replaced the plain HTML page with the Fiori Elements dashboard and object page (KPI tiles, charts, top errors, job list, job log, Analyze with AI).
 9. Moved to clean URLs (`job-failure-monitor` / `job-failure-monitor-srv`), removed the random routes, switched all apps to the `cflinuxfs5` stack and deleted the obsolete `cloud-alm-job-monitor-db-deployer`.
+11. Daily report per scheduler: e-mail resolved via Business User - Read (SAP_COM_0093), `sendDailyReport` action, `/run` sends one mail per scheduler with error reason and AI resolution; verified with a live test send.
 10. Pull from Cloud ALM opened to all dashboard users (it failed with 403 for non-admins); the AI action moved from the object page header into the AI Analysis tab.
 
 ---
 
 ## 11. Open items
 
-- **Scheduler e-mail address:** only the name is available. To send each person their own digest, add a name-to-e-mail mapping or a business-user lookup on my409865.
+- **Scheduler e-mail:** resolved via SAP_COM_0093; verified with real users (e.g. Carmen Nistor, Daniel Auer).
 - **Daily schedule:** create the job in the Job Scheduling dashboard (`POST /run`, e.g. `0 6 * * 1-5`); see `JOB-SCHEDULING.md`.
 - **Joule:** register the A2A agent in Joule Studio.
 - **Roles:** assign `JobFailureMonitor_Viewer` to users (this includes Pull from Cloud ALM).

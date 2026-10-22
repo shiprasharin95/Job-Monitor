@@ -85,17 +85,39 @@ function digest(schedulerName, schedulerEmail, failedJobs) {
   }
   if (!Array.isArray(jobs) || !jobs.length) throw new Error('failedJobs must contain at least one job.');
 
-  const lines = jobs.map((job, index) => [
+  const failedAt = (job) => (job.startedAt ? new Date(job.startedAt).toISOString().replace('T', ' ').slice(0, 16) + ' UTC' : 'Not available');
+  const reason = (job) => job.errorSummary || job.errorDescription || 'No error description returned';
+
+  const textBlocks = jobs.map((job, index) => [
     `${index + 1}. ${job.jobName || job.jobId || 'Unnamed job'}`,
     `Job ID: ${job.jobId || 'Not available'}`,
     `System: ${job.system || 'Not available'}`,
-    `Failed at: ${job.startedAt ? new Date(job.startedAt).toISOString().replace('T', ' ').slice(0, 16) + ' UTC' : 'Not available'}`,
-    `Error reason (job log): ${job.errorSummary || job.errorDescription || 'No error description returned'}`,
-    job.analysis ? `AI summary: ${job.analysis}` : null
+    `Failed at: ${failedAt(job)}`,
+    `Error reason (job log): ${reason(job)}`,
+    job.analysis ? `Possible resolution:\n${job.analysis}` : null
   ].filter(Boolean).join('\n')).join('\n\n');
+
+  const htmlBlocks = jobs.map((job, index) => `
+    <p style="margin:16px 0 4px"><b>${index + 1}. ${escapeHtml(job.jobName || job.jobId || 'Unnamed job')}</b></p>
+    <table style="border-collapse:collapse;font-size:14px">
+      <tr><td style="padding:2px 12px 2px 0;color:#555">Job ID:</td><td>${escapeHtml(job.jobId || 'Not available')}</td></tr>
+      <tr><td style="padding:2px 12px 2px 0;color:#555">System:</td><td>${escapeHtml(job.system || 'Not available')}</td></tr>
+      <tr><td style="padding:2px 12px 2px 0;color:#555">Failed at:</td><td>${escapeHtml(failedAt(job))}</td></tr>
+      <tr><td style="padding:2px 12px 2px 0;color:#555;vertical-align:top">Error reason (job log):</td><td style="color:#b00">${escapeHtml(reason(job)).replace(/\n/g, '<br>')}</td></tr>
+    </table>
+    ${job.analysis ? `<details open style="margin:6px 0 0"><summary style="cursor:pointer;color:#0a6ed1">Possible resolution</summary><div style="margin:6px 0 0 12px;padding:8px 12px;border-left:3px solid #0a6ed1;background:#f5f9ff;font-size:13px;white-space:pre-wrap">${escapeHtml(job.analysis)}</div></details>` : ''}`).join('');
+
   const subject = `[Action required] ${jobs.length} SAP batch job failure${jobs.length === 1 ? '' : 's'} for ${schedulerName || 'your schedule'}`;
-  const text = `Hello ${schedulerName || ''},\n\n${jobs.length} batch job(s) scheduled by you failed.\n\n${lines}\n\nThe resolution steps are AI-generated from official SAP documentation. Please validate them before applying changes.\n\nIf you did not schedule these jobs, you may disregard this e-mail.`;
-  const html = `<p>Hello ${escapeHtml(schedulerName || '')},</p><p><b>${jobs.length}</b> batch job(s) scheduled by you failed.</p><pre>${escapeHtml(lines)}</pre><p><i>The resolution steps are AI-generated from official SAP documentation. Please validate them before applying changes.</i></p><p>If you did not schedule these jobs, you may disregard this e-mail.</p>`;
+  const footer = 'The resolution steps are AI-generated from official SAP documentation. Please validate them before applying changes.';
+  const disclaimer = 'If you did not schedule these jobs, you may disregard this e-mail.';
+  const text = `Hello ${schedulerName || ''},\n\n${jobs.length} batch job(s) scheduled by you failed.\n\n${textBlocks}\n\n${footer}\n${disclaimer}`;
+  const html = `<div style="font-family:Arial,sans-serif;font-size:14px;color:#222">
+    <p>Hello ${escapeHtml(schedulerName || '')},</p>
+    <p><b>${jobs.length}</b> batch job(s) scheduled by you failed.</p>
+    ${htmlBlocks}
+    <hr style="border:0;border-top:1px solid #ddd;margin:20px 0">
+    <p style="color:#555;font-size:12px"><i>${footer}</i><br>${disclaimer}</p>
+  </div>`;
   return { recipient: schedulerEmail, jobCount: jobs.length, subject, text, html };
 }
 
@@ -132,4 +154,4 @@ async function sendDigest(schedulerName, schedulerEmail, failedJobs) {
   }
 }
 
-module.exports = { analyze, sendDigest };
+module.exports = { analyze, digest, sendDigest };
