@@ -12,4 +12,4 @@ applications:
     services:
       - cloud-alm-job-monitor-xsuaa
     env:
-      destinations: '[{"name":"srv-api","url":"https://job-failure-monitor-srv.cfapps.eu20-001.hana.ondemand.com","forwardAuthToken":true}]'
+      destinations: '[{"name":"srv-api","url":"https://job-failure-monitor-srv.cfapps.eu20-001.hana.ondemand.com","forwardAuthToken":true,"timeout":120000}]'

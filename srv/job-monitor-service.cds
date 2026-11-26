@@ -34,6 +34,39 @@ service JobMonitorService {
     action analyzeWithAI() returns JobRuns;
   };
 
+  // Unbound variant used by the AI Analysis tab: the bound action is not addressable from the
+  // object page context in every UI5 version, so the section calls this one with the run key.
+  action analyzeRunWithAI(sourceRunKey : String) returns JobRuns;
+
+  // Manual corrections written by the operations team and kept in HANA (not in Cloud ALM).
+  // One row per failed run; shown again for every run with the same job name.
+  type ManualCorrectionReference {
+        sourceKey      : String;
+        objectId       : String;
+        category       : String;
+        system         : String;
+        correctionText : LargeString;
+        createdBy      : String;
+        createdAt      : Timestamp;
+        modifiedBy     : String;
+        modifiedAt     : Timestamp;
+  }
+
+  type ManualCorrectionResult { sourceKey : String; correction : ManualCorrectionReference; }
+
+  function getManualCorrection(sourceKey : String) returns ManualCorrectionResult;
+  function getSimilarCorrections(jobName : String, excludeKey : String) returns array of ManualCorrectionReference;
+
+  // Saving an empty correctionText deletes the stored correction.
+  action saveManualCorrection(
+    sourceKey      : String,
+    correctionText : String,
+    objectId       : String,
+    category       : String,
+    system         : String,
+    errorText      : String
+  ) returns ManualCorrectionResult;
+
   // Full S/4HANA application job log for one run (read live via SAP_COM_0326).
   @readonly
   entity JobLogMessages {

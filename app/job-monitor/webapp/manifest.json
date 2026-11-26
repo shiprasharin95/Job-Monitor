@@ -45,7 +45,7 @@
       }
     },
     "contentDensities": { "compact": true, "cozy": true },
-    "resources": { "css": [{ "uri": "css/style.css" }] },
+    "resources": { "css": [{ "uri": "css/style.css" }, { "uri": "css/ai-analysis.css" }] },
     "models": {
       "": {
         "dataSource": "mainService",
@@ -85,7 +85,23 @@
           "options": {
             "settings": {
               "contextPath": "/JobRuns",
-              "editableHeaderContent": false
+              "editableHeaderContent": false,
+              "content": {
+                "body": {
+                  "sections": {
+                    "aiAnalysisSection": {
+                      "template": "job.monitor.ext.ai.AiAnalysisSection",
+                      "title": "AI Analysis",
+                      "position": { "placement": "After", "anchor": "ErrorFacet" }
+                    },
+                    "manualCorrectionsSection": {
+                      "template": "job.monitor.ext.ai.ManualCorrectionsSection",
+                      "title": "Manual Corrections",
+                      "position": { "placement": "After", "anchor": "aiAnalysisSection" }
+                    }
+                  }
+                }
+              }
             }
           }
         }

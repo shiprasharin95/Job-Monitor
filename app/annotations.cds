@@ -46,11 +46,8 @@ annotate service.JobRuns with @(
     { Value: system }, { Value: lastUpdatedAt }, { Value: sourceRunKey }
   ]},
   UI.FieldGroup #Error: { Data: [ { Value: errorText } ] },
-  // The AI action lives only in the AI Analysis tab (section toolbar), not in the page header.
-  UI.FieldGroup #AI   : { Data: [
-    { $Type: 'UI.DataFieldForAction', Action: 'JobMonitorService.analyzeWithAI', Label: 'Generate AI Analysis' },
-    { Value: aiAnalysis }, { Value: aiAnalyzedAt }
-  ] },
+  // The AI Analysis tab is a custom section (manifest: job.monitor.ext.ai.AiAnalysisSection),
+  // which renders the stored aiAnalysis as structured tables instead of raw Markdown.
 
   UI.Facets: [
     { $Type: 'UI.CollectionFacet', ID: 'Overview', Label: 'Overview', Facets: [
@@ -59,7 +56,6 @@ annotate service.JobRuns with @(
       { $Type: 'UI.ReferenceFacet', Label: 'Source System', Target: '@UI.FieldGroup#System' }
     ]},
     { $Type: 'UI.ReferenceFacet', ID: 'ErrorFacet', Label: 'Error Details', Target: '@UI.FieldGroup#Error' },
-    { $Type: 'UI.ReferenceFacet', ID: 'AIFacet', Label: 'AI Analysis', Target: '@UI.FieldGroup#AI' },
     { $Type: 'UI.ReferenceFacet', ID: 'LogFacet', Label: 'Job Log', Target: 'logMessages/@UI.LineItem' }
   ]
 ) {

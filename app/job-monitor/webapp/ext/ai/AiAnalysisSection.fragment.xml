@@ -1,0 +1,13 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:ai="job.monitor.ext.ai">
+
+  <!-- Shown inline in table form. Opening a run without a stored analysis generates it automatically;
+       "Regenerate AI Analysis" creates a fresh one. Past corrections of the same job are listed below. -->
+  <ai:AiAnalysis id="aiAnalysisControl"
+    analysis="{aiAnalysis}"
+    analyzedAt="{aiAnalyzedAt}"
+    jobName="{jobName}"
+    sourceKey="{sourceRunKey}"
+    autoGenerate="true"
+    emptyText="No AI analysis available for this job run yet."/>
+
+</core:FragmentDefinition>

@@ -1,0 +1,12 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns:ai="job.monitor.ext.ai">
+
+  <ai:ManualCorrections
+    sourceKey="{sourceRunKey}"
+    jobName="{jobName}"
+    objectId="{jobName}"
+    system="{system}"
+    errorText="{errorText}"
+    statusText="{statusGroup}"
+    statusState="{= ${statusCriticality} === 1 ? 'Error' : ${statusCriticality} === 2 ? 'Warning' : ${statusCriticality} === 3 ? 'Success' : 'Information' }"/>
+
+</core:FragmentDefinition>

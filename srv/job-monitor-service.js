@@ -4,6 +4,7 @@ const agent = require('./job-failure-agent');
 const s4JobLog = require('./s4-job-log');
 const sync = require('./cloud-alm-sync');
 const dailyReport = require('./daily-report');
+const corrections = require('./corrections');
 
 const MESSAGE_TYPE = {
   A: { text: 'Abort', criticality: 1 },
@@ -87,8 +88,8 @@ module.exports = (service) => {
     }
   });
 
-  service.on('analyzeWithAI', JobRuns, async (request) => {
-    const key = request.params[0]?.sourceRunKey || request.params[0];
+  // ------------------------------------------------------------ AI analysis
+  async function analyzeRun(request, key) {
     const run = await SELECT.one.from(JobRuns).columns('sourceRunKey', 'jobId', 'jobName').where({ sourceRunKey: key });
     if (!run) return request.error(404, 'Job run not found.');
     try {
@@ -98,7 +99,14 @@ module.exports = (service) => {
     } catch (error) {
       return fail(request, error);
     }
-  });
+  }
+
+  service.on('analyzeWithAI', JobRuns, (request) =>
+    analyzeRun(request, request.params[0]?.sourceRunKey || request.params[0]));
+
+  // Called by the AI Analysis tab on the object page (see job-monitor-service.cds).
+  service.on('analyzeRunWithAI', (request) =>
+    analyzeRun(request, request.data.sourceRunKey));
 
   // ------------------------------------------------------------ dashboard
   service.on('getKpis', (request) => store.kpis(request.data.period).catch((error) => fail(request, error)));
@@ -154,6 +162,36 @@ module.exports = (service) => {
 
   service.on('sendSchedulerDigest', (request) =>
     agent.sendDigest(request.data.schedulerName, request.data.schedulerEmail, request.data.failedJobs).catch((error) => fail(request, error)));
+
+  // ------------------------------------------------------------ manual corrections
+  // Written by the operations team on the run's object page and kept in HANA. Reading the correction
+  // of one run is used by the Manual Corrections tab; the similar ones of the same job are shown next
+  // to the AI analysis so a colleague does not have to re-diagnose a known failure.
+  service.on('getManualCorrection', async (request) => {
+    const key = request.data.sourceKey;
+    if (!key) return request.error(400, 'sourceKey is required.');
+    const correction = await corrections.byRun(key).catch((error) => fail(request, error));
+    return { sourceKey: key, correction: correction ? corrections.reference(correction) : null };
+  });
+
+  service.on('getSimilarCorrections', async (request) => {
+    const rows = await corrections.byJob(request.data.jobName, { excludeKey: request.data.excludeKey }).catch(() => []);
+    return rows.map(corrections.reference);
+  });
+
+  service.on('saveManualCorrection', async (request) => {
+    const { sourceKey, correctionText, objectId, category, system, errorText } = request.data;
+    try {
+      const saved = await corrections.save(request, {
+        sourceKey,
+        correctionText,
+        run: { objectId, category, system, errorText }
+      });
+      return { sourceKey, correction: saved ? corrections.reference(saved) : null };
+    } catch (error) {
+      return fail(request, error);
+    }
+  });
 };
 
 const { SELECT } = cds.ql;
